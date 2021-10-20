@@ -1,5 +1,7 @@
 package br.ce.wcaquino.tasks.functional;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
@@ -7,20 +9,27 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class TasksTest {
 
-	public WebDriver accessApplication()
+	public WebDriver accessApplication() throws MalformedURLException
 	{
-		WebDriver driver = new ChromeDriver();
-		driver.navigate().to("http://localhost:8001/tasks");
+		// usando o chrome driver para execucao direto no chrome
+		//WebDriver driver = new ChromeDriver();
+		// usando o selenium grid para execução nos nós do grid
+		DesiredCapabilities cap = DesiredCapabilities.chrome();
+		WebDriver driver = new RemoteWebDriver(new URL("http://192.168.0.4:4444/wd/hub"), cap);
+		//driver.navigate().to("http://localhost:8001/tasks");
+		driver.navigate().to("http://192.168.0.4:8001/tasks");
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		
 		return driver;
 	}
 	
 	@Test
-	public void shouldSaveTask()
+	public void shouldSaveTask() throws MalformedURLException
 	{	
 		WebDriver driver = accessApplication();
 		
@@ -54,7 +63,7 @@ public class TasksTest {
 	}
 	
 	@Test
-	public void shouldnSaveTaskWithoutDescription()
+	public void shouldnSaveTaskWithoutDescription() throws MalformedURLException
 	{	
 		WebDriver driver = accessApplication();
 		
@@ -84,7 +93,7 @@ public class TasksTest {
 	}
 	
 	@Test
-	public void shouldnSaveTaskWithoutDate()
+	public void shouldnSaveTaskWithoutDate() throws MalformedURLException
 	{	
 		WebDriver driver = accessApplication();
 		
@@ -114,7 +123,7 @@ public class TasksTest {
 	}
 	
 	@Test
-	public void shouldntSaveTaskWithPastDate()
+	public void shouldntSaveTaskWithPastDate() throws MalformedURLException
 	{	
 		WebDriver driver = accessApplication();
 		
